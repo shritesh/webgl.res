@@ -5,8 +5,8 @@
     "build": "bsb -make-world",
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world",
-    "serve": "parcel 'www/*.html'",
-    "deploy": "parcel build 'www/*.html'"
+    "serve": "parcel www/index.html",
+    "deploy": "parcel build --public-url ./ www/index.html"
   },
   "keywords": [
     "BuckleScript"
