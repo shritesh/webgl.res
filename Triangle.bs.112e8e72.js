@@ -11,4 +11,4 @@ parcelRequire=function(e,r,t,n){var i,o="function"==typeof parcelRequire&&parcel
 },{"bs-platform/lib/js/belt_Option.js":"cnZ9","bs-platform/lib/js/caml_option.js":"e2Or"}],"GACR":[function(require,module,exports) {
 "use strict";var e=require("bs-platform/lib/js/belt_Option.js"),r=require("./WebGl.bs.js"),t=e.getExn(r.canvas),a=e.getExn(r.getContext(t));r.viewport(a,0,0,r.width(t),r.height(t));var n=e.getExn(r.createVertexShader(a,"\nattribute vec4 vPosition;\nvoid main() {\n    gl_Position = vPosition;\n}")),o=e.getExn(r.createFragmentShader(a,"\nprecision mediump float;\nvoid main() {\n    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n}")),i=e.getExn(r.createProgram(a,n,o));r.useProgram(a,i);var s=new Float32Array([-1,-1,0,1,1,-1]);exports.canvas=t,exports.gl=a,exports.vertexShader=n,exports.fragmentShader=o,exports.program=i,exports.vertices=s;
 },{"bs-platform/lib/js/belt_Option.js":"cnZ9","./WebGl.bs.js":"i88R"}]},{},["GACR"], null)
-//# sourceMappingURL=/Triangle.bs.112e8e72.js.map
+//# sourceMappingURL=Triangle.bs.112e8e72.js.map
