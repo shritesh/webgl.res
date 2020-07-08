@@ -27,14 +27,14 @@ type programParamT
 @bs.get external shaderCompileStatus : glT => shaderParamT = "COMPILE_STATUS"
 @bs.send external getShaderParamBool: (glT, shaderT, shaderParamT) => bool = "getShaderParameter"
 
-@bs.send external _createProgram: glT => option<programT> = "createProgram" 
+@bs.send external createProgram: glT => option<programT> = "createProgram" 
 @bs.send external attachShader: (glT, programT, shaderT) => unit = "attachShader"
 @bs.send external linkProgram: (glT, programT) => unit = "linkProgram"
 @bs.get external programLinkStatus : glT => programParamT = "LINK_STATUS"
 @bs.send external getProgramParamBool: (glT, programT, programParamT) => bool = "getProgramParameter"
 @bs.send external useProgram: (glT, programT) => unit = "useProgram"
 
-let _createShader = (ctx:glT, typ: shaderType, src: string): option<shaderT> => {
+let makeShader = (ctx:glT, typ: shaderType, src: string): option<shaderT> => {
     ctx
     ->createShader(typ)
     ->Option.flatMap(shader => {
@@ -48,21 +48,21 @@ let _createShader = (ctx:glT, typ: shaderType, src: string): option<shaderT> => 
     })
 }
 
-let createVertexShader = (ctx: glT, src: string): option<vertexShaderT> => {
+let makeVertexShader = (ctx: glT, src: string): option<vertexShaderT> => {
     ctx
-    ->_createShader(ctx->vertexShader, src)
+    ->makeShader(ctx->vertexShader, src)
     ->Option.map(shader => VertexShader(shader))
 }
 
-let createFragmentShader = (ctx: glT, src: string): option<fragmentShaderT> => {
+let makeFragmentShader = (ctx: glT, src: string): option<fragmentShaderT> => {
     ctx
-    ->_createShader(ctx->fragmentShader, src)
+    ->makeShader(ctx->fragmentShader, src)
     ->Option.map(shader => FragmentShader(shader))
 }
 
-let createProgram = (ctx: glT, vert: vertexShaderT, frag: fragmentShaderT): option<programT> => {
+let makeProgram = (ctx: glT, vert: vertexShaderT, frag: fragmentShaderT): option<programT> => {
     ctx
-    ->_createProgram
+    ->createProgram
     ->Option.flatMap(program => {
         let (VertexShader(v), FragmentShader(f)) = (vert, frag)
         ctx->attachShader(program, v)
