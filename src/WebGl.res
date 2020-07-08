@@ -13,7 +13,11 @@ type programT
 type programParamT
 
 @bs.val @bs.scope("document") @bs.return(nullable) external canvas: @bs.as("canvas") _ => option<canvasT> = "querySelector"
+@bs.get external width: canvasT => int = "width"
+@bs.get external height: canvasT => int = "height"
+
 @bs.send @bs.return(nullable) external getContext: (canvasT, @bs.as("webgl") _) => option<glT> = "getContext"
+@bs.send external viewport: (glT, ~x: int, ~y: int, ~width: int, ~height: int) => unit = "viewport"
 
 @bs.get external vertexShader : glT => shaderType = "VERTEX_SHADER"
 @bs.get external fragmentShader : glT => shaderType = "FRAGMENT_SHADER"

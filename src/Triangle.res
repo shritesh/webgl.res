@@ -4,6 +4,8 @@ open Js.Typed_array
 let canvas = WebGl.canvas->Option.getExn
 let gl = canvas->WebGl.getContext->Option.getExn
 
+gl->WebGl.viewport(~x=0, ~y=0, ~width=canvas->WebGl.width, ~height=canvas->WebGl.height)
+
 let vertexShader = gl->WebGl.createVertexShader(`
 attribute vec4 vPosition;
 void main() {
