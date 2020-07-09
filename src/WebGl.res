@@ -35,16 +35,16 @@ type dataTypeT = [ #Float ]
 
 @bs.send external drawArrays: (glT, @bs.int [@bs.as(0x0004) #Triangles], ~offset: int, ~count: int) => unit = "drawArrays"
 
-@bs.send @bs.return(nullable) external createShader: (glT, @bs.int [@bs.as(0x8B31) #vertexShader | @bs.as(0x8B30) #fragmentShader]) => option<shaderT> = "createShader"
+@bs.send @bs.return(nullable) external createShader: (glT, @bs.int [@bs.as(0x8B31) #VertexShader | @bs.as(0x8B30) #FragmentShader]) => option<shaderT> = "createShader"
 
 @bs.send external shaderSource: (glT, shaderT, string) => unit = "shaderSource"
 @bs.send external compileShader: (glT, shaderT) => unit = "compileShader"
-@bs.send external getShaderParamBool: (glT, shaderT, @bs.int [@bs.as(0x8B81) #compileStatus]) => bool = "getShaderParameter"
+@bs.send external getShaderParamBool: (glT, shaderT, @bs.int [@bs.as(0x8B81) #CompileStatus]) => bool = "getShaderParameter"
 
 @bs.send external createProgram: glT => option<programT> = "createProgram" 
 @bs.send external attachShader: (glT, programT, shaderT) => unit = "attachShader"
 @bs.send external linkProgram: (glT, programT) => unit = "linkProgram"
-@bs.send external getProgramParamBool: (glT, programT, @bs.int [@bs.as(0x8B82) #linkStatus]) => bool = "getProgramParameter"
+@bs.send external getProgramParamBool: (glT, programT, @bs.int [@bs.as(0x8B82) #LinkStatus]) => bool = "getProgramParameter"
 @bs.send external useProgram: (glT, programT) => unit = "useProgram"
 
 @bs.send @bs.return(nullable) external createBuffer: glT => option<bufferT> = "createBuffer"
@@ -55,22 +55,22 @@ type dataTypeT = [ #Float ]
 @bs.send external vertexAttribPointer: (glT, attribLocationT, ~size: int, ~dataType: @bs.int [@bs.as(0x1406) #Float], ~normalized: bool, ~stride: int, ~offset: int) => unit = "vertexAttribPointer"
 @bs.send external enableVertexAttribArray: (glT, attribLocationT) => unit = "enableVertexAttribArray"
 
-let makeShader = (ctx:glT, typ: [#vertexShader | #fragmentShader], src: string): option<shaderT> => {
+let makeShader = (ctx:glT, typ: [#VertexShader | #FragmentShader], src: string): option<shaderT> => {
     ctx
     ->createShader(typ)
     ->Option.flatMap(shader => {
         ctx->shaderSource(shader, src)
         ctx->compileShader(shader)
-        ctx->getShaderParamBool(shader, #compileStatus) ? Some(shader) : None
+        ctx->getShaderParamBool(shader, #CompileStatus) ? Some(shader) : None
     })
 }
 
 let makeVertexShader = (ctx: glT, src: string): option<vertexShaderT> => {
-    ctx->makeShader(#vertexShader, src)
+    ctx->makeShader(#VertexShader, src)
 }
 
 let makeFragmentShader = (ctx: glT, src: string): option<fragmentShaderT> => {
-    ctx->makeShader(#fragmentShader, src)
+    ctx->makeShader(#FragmentShader, src)
 }
 
 let makeProgram = (ctx: glT, vert: vertexShaderT, frag: fragmentShaderT): option<programT> => {
@@ -80,7 +80,7 @@ let makeProgram = (ctx: glT, vert: vertexShaderT, frag: fragmentShaderT): option
         ctx->attachShader(program, vert)
         ctx->attachShader(program, frag)
         ctx->linkProgram(program)
-        ctx->getProgramParamBool(program, #linkStatus) ? Some(program) : None
+        ctx->getProgramParamBool(program, #LinkStatus) ? Some(program) : None
     })
 }
 
