@@ -28,3 +28,10 @@ let vertices = Float32Array.make([-1.0, -1.0, 0.0, 1.0, 1.0, -1.0])
 let buffer = gl->WebGl.createBuffer->Option.getExn
 gl->WebGl.bindBuffer(#ArrayBuffer, buffer)
 gl->WebGl.bufferData(#ArrayBuffer, vertices->Float32Array.buffer, #StaticDraw)
+
+let vPosition = gl->WebGl.getAttribLocation(program, "vPosition")->Option.getExn
+gl->WebGl.vertexAttribPointer(vPosition, ~size=2, ~dataType=#Float, ~normalized=false, ~stride=0, ~offset=0)
+gl->WebGl.enableVertexAttribArray(vPosition)
+
+gl->WebGl.clear(#ColorBuffer)
+gl->WebGl.drawArrays(#Triangles, ~offset=0, ~count=3)
