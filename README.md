@@ -1,24 +1,5 @@
-# Basic Reason Template
+# webgl.bs
 
-Hello! This project allows you to quickly get started with Reason and BuckleScript. If you wanted a more sophisticated version, try the `react` template (`bsb -theme react -init .`).
+[Interactive Computer Graphics A Top-Down Approach with WebGL](https://www.cs.unm.edu/~angel/BOOK/INTERACTIVE_COMPUTER_GRAPHICS/SEVENTH_EDITION/) in BuckleScript/ReasonML.
 
-# Build
-
-```bash
-# for yarn
-yarn build
-
-# for npm
-npm run build
-```
-
-# Build + Watch
-
-```bash
-# for yarn
-yarn start
-
-# for npm
-npm run start
-```
-
+There's also a [webassembly version in Rust](https://github.com/shritesh/webgl.rs).
