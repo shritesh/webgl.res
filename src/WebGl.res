@@ -61,11 +61,7 @@ let makeShader = (ctx:glT, typ: [#vertexShader | #fragmentShader], src: string):
     ->Option.flatMap(shader => {
         ctx->shaderSource(shader, src)
         ctx->compileShader(shader)
-        if ctx->getShaderParamBool(shader, #compileStatus) {
-            Some(shader)
-        } else {
-            None
-        }
+        ctx->getShaderParamBool(shader, #compileStatus) ? Some(shader) : None
     })
 }
 
@@ -84,11 +80,7 @@ let makeProgram = (ctx: glT, vert: vertexShaderT, frag: fragmentShaderT): option
         ctx->attachShader(program, vert)
         ctx->attachShader(program, frag)
         ctx->linkProgram(program)
-        if ctx->getProgramParamBool(program, #linkStatus) {
-            Some(program)
-        } else {
-            None
-        }
+        ctx->getProgramParamBool(program, #linkStatus) ? Some(program) : None
     })
 }
 
