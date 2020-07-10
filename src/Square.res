@@ -1,7 +1,7 @@
 open Belt
 open WebGl
 
-let canvas = canvas->Option.getExn
+let canvas = getCanvas()->Option.getExn
 let gl = canvas->getContext->Option.getExn
 
 let vertexShader = gl->makeVertexShader(`

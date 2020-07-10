@@ -2,7 +2,7 @@ open Belt
 open Js.Typed_array
 open WebGl
 
-let canvas = canvas->Option.getExn
+let canvas = getCanvas()->Option.getExn
 let gl = canvas->getContext->Option.getExn
 
 gl->viewport(~x=0, ~y=0, ~width=canvas->width, ~height=canvas->height)

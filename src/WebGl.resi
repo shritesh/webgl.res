@@ -20,7 +20,7 @@ type attribLocationT
 
 type dataTypeT = [ #Float ]
 
-let canvas: option<canvasT>
+let getCanvas: () => option<canvasT>
 let width: canvasT => int
 let height: canvasT => int
 

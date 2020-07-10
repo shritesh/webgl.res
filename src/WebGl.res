@@ -23,7 +23,7 @@ type attribLocationT = int
 
 type dataTypeT = [ #Float ]
 
-@bs.val @bs.scope("document") @bs.return(nullable) external canvas: @bs.as("canvas") _ => option<canvasT> = "querySelector"
+@bs.val @bs.scope("document") @bs.return(nullable) external getCanvas: (@bs.as("canvas") _, ()) => option<canvasT> = "querySelector"
 @bs.get external width: canvasT => int = "width"
 @bs.get external height: canvasT => int = "height"
 
