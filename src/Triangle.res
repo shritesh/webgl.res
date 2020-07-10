@@ -1,3 +1,4 @@
+{
 open Belt
 open Js.Typed_array
 open WebGl
@@ -36,3 +37,5 @@ gl->enableVertexAttribArray(vPosition)
 
 gl->clear(#ColorBuffer)
 gl->drawArrays(#Triangles, ~offset=0, ~count=3)
+
+}
