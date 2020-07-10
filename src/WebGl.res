@@ -6,7 +6,7 @@ type glT
 
 type clearMaskT = [ #ColorBuffer ]
 
-type drawModeT = [ #Triangles ]
+type drawModeT = [ #Triangles | #TriangleFan ]
 
 type shaderT
 type vertexShaderT = shaderT
@@ -33,7 +33,7 @@ type dataTypeT = [ #Float ]
 
 @bs.send external clear: (glT, @bs.int [@bs.as(0x00004000) #ColorBuffer]) => unit = "clear"
 
-@bs.send external drawArrays: (glT, @bs.int [@bs.as(0x0004) #Triangles], ~offset: int, ~count: int) => unit = "drawArrays"
+@bs.send external drawArrays: (glT, @bs.int [@bs.as(0x0004) #Triangles | @bs.as(0x0006) #TriangleFan], ~offset: int, ~count: int) => unit = "drawArrays"
 
 @bs.send @bs.return(nullable) external createShader: (glT, @bs.int [@bs.as(0x8B31) #VertexShader | @bs.as(0x8B30) #FragmentShader]) => option<shaderT> = "createShader"
 
