@@ -2,4 +2,7 @@ open Js.Typed_array
 
 type t = (float, float)
 
+let add: (t, t) => t
+let scale: (t, float) => t
+
 let flatten: array<t> => ArrayBuffer.t

@@ -5,7 +5,7 @@ type glT
 
 type clearMaskT = [ #ColorBuffer ]
 
-type drawModeT = [ #Triangles | #TriangleFan ]
+type drawModeT = [ #Points | #Triangles | #TriangleFan ]
 
 type vertexShaderT
 type fragmentShaderT
