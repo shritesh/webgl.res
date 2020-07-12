@@ -20,28 +20,28 @@ type attribLocationT
 
 type dataTypeT = [ #Float ]
 
-let getCanvas: () => option<canvasT>
-let width: canvasT => int
-let height: canvasT => int
+@bs.val @bs.scope("document") @bs.return(nullable) external getCanvas: (@bs.as("canvas") _, ()) => option<canvasT> = "querySelector"
+@bs.get external width: canvasT => int = "width"
+@bs.get external height: canvasT => int = "height"
 
-let getContext: canvasT => option<glT>
-let viewport: (glT, ~x: int, ~y: int, ~width: int, ~height: int) => unit
-let clearColor: (glT, ~r: float, ~g: float, ~b: float, ~a: float) => unit
+@bs.send @bs.return(nullable) external getContext: (canvasT, @bs.as("webgl") _) => option<glT> = "getContext"
+@bs.send external viewport: (glT, ~x: int, ~y: int, ~width: int, ~height: int) => unit = "viewport"
+@bs.send external clearColor: (glT, ~r: float, ~g: float, ~b: float, ~a: float) => unit = "clearColor"
 
-let clear: (glT, clearMaskT) => unit
+@bs.send external clear: (glT, @bs.int [@bs.as(0x00004000) #ColorBuffer]) => unit = "clear"
 
-let drawArrays: (glT, drawModeT, ~offset: int, ~count: int) => unit
+@bs.send external drawArrays: (glT, @bs.int [@bs.as(0x0000) #Points | @bs.as(0x0004) #Triangles | @bs.as(0x0006) #TriangleFan], ~offset: int, ~count: int) => unit = "drawArrays"
 
 let makeVertexShader: (glT, string) => option<vertexShaderT>
 let makeFragmentShader: (glT, string) => option<fragmentShaderT>
 
 let makeProgram: (glT, vertexShaderT, fragmentShaderT) => option<programT>
-let useProgram: (glT, programT) => unit
+@bs.send external useProgram: (glT, programT) => unit = "useProgram"
 
-let createBuffer: glT => option<bufferT>
-let bindBuffer: (glT, targetT, bufferT) => unit
-let bufferData: (glT, targetT, ArrayBuffer.t, usageT) => unit
+@bs.send @bs.return(nullable) external createBuffer: glT => option<bufferT> = "createBuffer"
+@bs.send external bindBuffer: (glT, @bs.int [@bs.as(0x8892) #ArrayBuffer], bufferT) => unit = "bindBuffer"
+@bs.send external bufferData: (glT, @bs.int [@bs.as(0x8892) #ArrayBuffer], ArrayBuffer.t, @bs.int [@bs.as(0x88E4) #StaticDraw]) => unit = "bufferData"
 
 let getAttribLocation: (glT, programT, string) => option<attribLocationT>
-let vertexAttribPointer: (glT, attribLocationT, ~size: int, ~dataType: dataTypeT, ~normalized: bool, ~stride: int, ~offset: int) => unit
-let enableVertexAttribArray: (glT, attribLocationT) => unit
+@bs.send external vertexAttribPointer: (glT, attribLocationT, ~size: int, ~dataType: @bs.int [@bs.as(0x1406) #Float], ~normalized: bool, ~stride: int, ~offset: int) => unit = "vertexAttribPointer"
+@bs.send external enableVertexAttribArray: (glT, attribLocationT) => unit = "enableVertexAttribArray"

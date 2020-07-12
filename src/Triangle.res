@@ -37,5 +37,4 @@ gl->enableVertexAttribArray(vPosition)
 
 gl->clear(#ColorBuffer)
 gl->drawArrays(#Triangles, ~offset=0, ~count=3)
-
 }
