@@ -8,11 +8,11 @@ let scale = ((x, y, z): t, s: float): t => (x *. s, y *. s, z *. s)
 let mix = (a: t, b: t, s: float): t => add(a->scale(s), b->scale(1.0 -. s))
 
 let flatten = (vecs: array<t>): ArrayBuffer.t => {
-    let arr = Float32Array.fromLength(3 * Array.length(vecs))
-    Array.forEachWithIndex(vecs, (i, (x ,y, z)) => {
-        arr->Float32Array.unsafe_set(i * 3, x)
-        arr->Float32Array.unsafe_set(1 + 3 * i, y)
-        arr->Float32Array.unsafe_set(2 + 3 * i, z)
-    })
-    arr->Float32Array.buffer
+  let arr = Float32Array.fromLength(3 * Array.length(vecs))
+  Array.forEachWithIndex(vecs, (i, (x, y, z)) => {
+    arr->Float32Array.unsafe_set(i * 3, x)
+    arr->Float32Array.unsafe_set(1 + 3 * i, y)
+    arr->Float32Array.unsafe_set(2 + 3 * i, z)
+  })
+  arr->Float32Array.buffer
 }

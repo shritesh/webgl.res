@@ -4,6 +4,6 @@ type t = (float, float, float)
 
 let add: (t, t) => t
 let scale: (t, float) => t
-let mix: (t, t, float) => t 
+let mix: (t, t, float) => t
 
 let flatten: array<t> => ArrayBuffer.t

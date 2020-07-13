@@ -3,9 +3,9 @@ open Js.Typed_array
 type canvasT
 type glT
 
-type clearMaskT = [ #ColorBuffer ]
+type clearMaskT = [ | #ColorBuffer ]
 
-type drawModeT = [ #Points | #Triangles | #TriangleFan ]
+type drawModeT = [ | #Points | #Triangles | #TriangleFan ]
 
 type vertexShaderT
 type fragmentShaderT
@@ -13,24 +13,33 @@ type programT
 
 type bufferT
 
-type targetT = [ #ArrayBuffer ]
-type usageT = [ #StaticDraw ]
+type targetT = [ | #ArrayBuffer ]
+type usageT = [ | #StaticDraw ]
 
 type attribLocationT
 
-type dataTypeT = [ #Float ]
+type dataTypeT = [ | #Float ]
 
-@bs.val @bs.scope("document") @bs.return(nullable) external getCanvas: (@bs.as("canvas") _, ()) => option<canvasT> = "querySelector"
+@bs.val @bs.scope("document") @bs.return(nullable)
+external getCanvas: (@bs.as("canvas") _, unit) => option<canvasT> = "querySelector"
 @bs.get external width: canvasT => int = "width"
 @bs.get external height: canvasT => int = "height"
 
-@bs.send @bs.return(nullable) external getContext: (canvasT, @bs.as("webgl") _) => option<glT> = "getContext"
+@bs.send @bs.return(nullable)
+external getContext: (canvasT, @bs.as("webgl") _) => option<glT> = "getContext"
 @bs.send external viewport: (glT, ~x: int, ~y: int, ~width: int, ~height: int) => unit = "viewport"
-@bs.send external clearColor: (glT, ~r: float, ~g: float, ~b: float, ~a: float) => unit = "clearColor"
+@bs.send
+external clearColor: (glT, ~r: float, ~g: float, ~b: float, ~a: float) => unit = "clearColor"
 
-@bs.send external clear: (glT, @bs.int [@bs.as(0x00004000) #ColorBuffer]) => unit = "clear"
+@bs.send external clear: (glT, @bs.int [ | @bs.as(0x00004000) #ColorBuffer ]) => unit = "clear"
 
-@bs.send external drawArrays: (glT, @bs.int [@bs.as(0x0000) #Points | @bs.as(0x0004) #Triangles | @bs.as(0x0006) #TriangleFan], ~offset: int, ~count: int) => unit = "drawArrays"
+@bs.send
+external drawArrays: (
+  glT,
+  @bs.int [ | @bs.as(0x0000) #Points | @bs.as(0x0004) #Triangles | @bs.as(0x0006) #TriangleFan ],
+  ~offset: int,
+  ~count: int,
+) => unit = "drawArrays"
 
 let makeVertexShader: (glT, string) => option<vertexShaderT>
 let makeFragmentShader: (glT, string) => option<fragmentShaderT>
@@ -39,9 +48,27 @@ let makeProgram: (glT, vertexShaderT, fragmentShaderT) => option<programT>
 @bs.send external useProgram: (glT, programT) => unit = "useProgram"
 
 @bs.send @bs.return(nullable) external createBuffer: glT => option<bufferT> = "createBuffer"
-@bs.send external bindBuffer: (glT, @bs.int [@bs.as(0x8892) #ArrayBuffer], bufferT) => unit = "bindBuffer"
-@bs.send external bufferData: (glT, @bs.int [@bs.as(0x8892) #ArrayBuffer], ArrayBuffer.t, @bs.int [@bs.as(0x88E4) #StaticDraw]) => unit = "bufferData"
+@bs.send
+external bindBuffer: (glT, @bs.int [ | @bs.as(0x8892) #ArrayBuffer ], bufferT) => unit =
+  "bindBuffer"
+@bs.send
+external bufferData: (
+  glT,
+  @bs.int [ | @bs.as(0x8892) #ArrayBuffer ],
+  ArrayBuffer.t,
+  @bs.int [ | @bs.as(0x88E4) #StaticDraw ],
+) => unit = "bufferData"
 
 let getAttribLocation: (glT, programT, string) => option<attribLocationT>
-@bs.send external vertexAttribPointer: (glT, attribLocationT, ~size: int, ~dataType: @bs.int [@bs.as(0x1406) #Float], ~normalized: bool, ~stride: int, ~offset: int) => unit = "vertexAttribPointer"
-@bs.send external enableVertexAttribArray: (glT, attribLocationT) => unit = "enableVertexAttribArray"
+@bs.send
+external vertexAttribPointer: (
+  glT,
+  attribLocationT,
+  ~size: int,
+  ~dataType: @bs.int [ | @bs.as(0x1406) #Float ],
+  ~normalized: bool,
+  ~stride: int,
+  ~offset: int,
+) => unit = "vertexAttribPointer"
+@bs.send
+external enableVertexAttribArray: (glT, attribLocationT) => unit = "enableVertexAttribArray"
