@@ -12,12 +12,13 @@
     gl
     ->makeVertexShader(
       `
-attribute vec4 vPosition;
+      attribute vec4 vPosition;
 
-void main() {
-    gl_PointSize = 1.0;
-    gl_Position = vPosition;
-}`,
+      void main() {
+        gl_PointSize = 1.0;
+        gl_Position = vPosition;
+      }
+      `,
     )
     ->Option.getExn
 
@@ -25,11 +26,12 @@ void main() {
     gl
     ->makeFragmentShader(
       `
-precision mediump float;
+      precision mediump float;
 
-void main() {
-    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-}`,
+      void main() {
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+      }
+      `,
     )
     ->Option.getExn
 

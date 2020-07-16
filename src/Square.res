@@ -7,21 +7,27 @@
 
   let vertexShader =
     gl
-    ->makeVertexShader(`
-attribute vec4 vPosition;
-void main() {
-    gl_Position = vPosition;
-}`)
+    ->makeVertexShader(
+      `
+      attribute vec4 vPosition;
+
+      void main() {
+        gl_Position = vPosition;
+      }
+      `,
+    )
     ->Option.getExn
 
   let fragmentShader =
     gl
     ->makeFragmentShader(
       `
-precision mediump float;
-void main() {
-    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-}`,
+      precision mediump float;
+      
+      void main() {
+        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+      }
+      `,
     )
     ->Option.getExn
 
