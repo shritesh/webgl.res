@@ -3,7 +3,9 @@ open Js.Typed_array
 type canvasT
 type glT
 
-type clearMaskT = [ | #ColorBuffer ]
+type clearMaskT = [ | #DepthBuffer | #ColorBuffer | #DepthAndColorBuffer ]
+
+type capabilityT = [ | #DepthTest ]
 
 type drawModeT = [ | #Points | #Triangles | #TriangleFan ]
 
@@ -31,7 +33,20 @@ external getContext: (canvasT, @bs.as("webgl") _) => option<glT> = "getContext"
 @bs.send
 external clearColor: (glT, ~r: float, ~g: float, ~b: float, ~a: float) => unit = "clearColor"
 
-@bs.send external clear: (glT, @bs.int [ | @bs.as(0x00004000) #ColorBuffer ]) => unit = "clear"
+@bs.send
+external clear: (
+  glT,
+  @bs.int
+  [
+  | @bs.as(0x00000100)
+  #DepthBuffer
+  | @bs.as(0x00004000)
+  #ColorBuffer
+  | @bs.as(0x00004100)
+  #DepthAndColorBuffer
+  ],
+) => unit = "clear"
+@bs.send external enable: (glT, @bs.int [ | @bs.as(0x0B71) #DepthTest ]) => unit = "enable"
 
 @bs.send
 external drawArrays: (
