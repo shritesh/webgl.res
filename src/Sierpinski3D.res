@@ -1,4 +1,4 @@
-open Js
+open Belt
 open Vec3
 open WebGl
 
@@ -38,24 +38,21 @@ let program = gl->makeProgram(vertexShader, fragmentShader)->Option.getExn
 
 gl->useProgram(program)
 
-let points = []
-let colors = []
+let triangle = ((points, colors), a, b, c, color) => (
+  list{a, b, c, ...points},
+  list{color, color, color, ...colors},
+)
 
-let triangle = (a, b, c, color) => {
-  points |> Array.pushMany([a, b, c]) |> ignore
-  colors |> Array.pushMany([color, color, color]) |> ignore
-}
+let tetra = (attrs, a, b, c, d) =>
+  attrs
+  ->triangle(a, c, b, (1.0, 0.0, 0.0))
+  ->triangle(a, c, d, (0.0, 1.0, 0.0))
+  ->triangle(a, b, d, (0.0, 0.0, 1.0))
+  ->triangle(b, c, d, (0.0, 0.0, 0.0))
 
-let tetra = (a, b, c, d) => {
-  triangle(a, c, b, (1.0, 0.0, 0.0))
-  triangle(a, c, d, (0.0, 1.0, 0.0))
-  triangle(a, b, d, (0.0, 0.0, 1.0))
-  triangle(b, c, d, (0.0, 0.0, 0.0))
-}
-
-let rec divideTetra = (a, b, c, d, count) =>
+let rec divideTetra = (attrs, a, b, c, d, count) =>
   if count == 0 {
-    tetra(a, b, c, d)
+    attrs->tetra(a, b, c, d)
   } else {
     let ab = a->mix(b, 0.5)
     let ac = a->mix(c, 0.5)
@@ -64,11 +61,17 @@ let rec divideTetra = (a, b, c, d, count) =>
     let bd = b->mix(d, 0.5)
     let cd = c->mix(d, 0.5)
 
-    divideTetra(a, ab, ac, ad, count - 1)
-    divideTetra(ab, b, bc, bd, count - 1)
-    divideTetra(ac, bc, c, cd, count - 1)
-    divideTetra(ad, bd, cd, d, count - 1)
+    attrs
+    ->divideTetra(a, ab, ac, ad, count - 1)
+    ->divideTetra(ab, b, bc, bd, count - 1)
+    ->divideTetra(ac, bc, c, cd, count - 1)
+    ->divideTetra(ad, bd, cd, d, count - 1)
   }
+
+let makeTetra = (a, b, c, d, count) => {
+  let (points, colors) = divideTetra((list{}, list{}), a, b, c, d, count)
+  (points->List.toArray, colors->List.toArray)
+}
 
 let (v0, v1, v2, v3) = (
   (0.0000, 0.0000, -1.0000),
@@ -78,7 +81,7 @@ let (v0, v1, v2, v3) = (
 )
 
 let _SUBDIVISIONS = 3
-divideTetra(v0, v1, v2, v3, _SUBDIVISIONS)
+let (points, colors) = makeTetra(v0, v1, v2, v3, _SUBDIVISIONS)
 
 let vBuffer = gl->createBuffer->Option.getExn
 gl->bindBuffer(#ArrayBuffer, vBuffer)

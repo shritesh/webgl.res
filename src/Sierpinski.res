@@ -1,4 +1,4 @@
-open Js
+open Belt
 open WebGl
 open Vec2
 
@@ -35,27 +35,28 @@ let program = gl->makeProgram(vertexShader, fragmentShader)->Option.getExn
 
 gl->useProgram(program)
 
-let (v0, v1, v2) = ((-1.0, -1.0), (0.0, 1.0), (1.0, -1.0))
-
-let points = []
-
-let rec divideTriangles = (a, b, c, count) => {
+let rec divideTriangles = (points, a, b, c, count) => {
   if count == 0 {
-    points |> Array.pushMany([a, b, c]) |> ignore
+    list{a, b, c, ...points}
   } else {
     let ab = a->mix(b, 0.5)
     let ac = a->mix(c, 0.5)
     let bc = b->mix(c, 0.5)
 
-    divideTriangles(a, ab, ac, count - 1)
-    divideTriangles(b, bc, ab, count - 1)
-    divideTriangles(c, ac, bc, count - 1)
+    points
+    ->divideTriangles(a, ab, ac, count - 1)
+    ->divideTriangles(b, bc, ab, count - 1)
+    ->divideTriangles(c, ac, bc, count - 1)
   }
 }
 
+let makeTriangles = (a, b, c, count) => divideTriangles(list{}, a, b, c, count)->List.toArray
+
+let (v0, v1, v2) = ((-1.0, -1.0), (0.0, 1.0), (1.0, -1.0))
+
 let _SUBDIVISIONS = 5
 
-divideTriangles(v0, v1, v2, _SUBDIVISIONS)
+let points = makeTriangles(v0, v1, v2, _SUBDIVISIONS)
 
 let buffer = gl->createBuffer->Option.getExn
 gl->bindBuffer(#ArrayBuffer, buffer)
