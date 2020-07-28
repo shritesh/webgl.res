@@ -1,4 +1,5 @@
 open Belt
+open Dom
 open WebGl
 
 let canvas = getCanvas()->Option.getExn

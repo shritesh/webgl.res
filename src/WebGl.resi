@@ -23,11 +23,8 @@ type uniformLocationT
 
 type dataTypeT = [ | #Float ]
 
-@bs.val @bs.scope("window")
-external requestAnimationFrame: (unit => unit) => unit = "requestAnimationFrame"
+let getCanvas: unit => option<canvasT>
 
-@bs.val @bs.scope("document") @bs.return(nullable)
-external getCanvas: (@bs.as("canvas") _, unit) => option<canvasT> = "querySelector"
 @bs.get external width: canvasT => int = "width"
 @bs.get external height: canvasT => int = "height"
 

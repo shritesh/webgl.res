@@ -1,7 +1,7 @@
 open Belt
 open Js.Typed_array
 
-type canvasT
+type canvasT = Dom.elementT
 type glT
 
 type clearMaskT = [ | #DepthBuffer | #ColorBuffer | #DepthAndColorBuffer ]
@@ -26,11 +26,8 @@ type uniformLocationT
 
 type dataTypeT = [ | #Float ]
 
-@bs.val @bs.scope("window")
-external requestAnimationFrame: (unit => unit) => unit = "requestAnimationFrame"
+let getCanvas = () => Dom.querySelector("canvas")
 
-@bs.val @bs.scope("document") @bs.return(nullable)
-external getCanvas: (@bs.as("canvas") _, unit) => option<canvasT> = "querySelector"
 @bs.get external width: canvasT => int = "width"
 @bs.get external height: canvasT => int = "height"
 
