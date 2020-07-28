@@ -8,7 +8,7 @@ type clearMaskT = [ | #DepthBuffer | #ColorBuffer | #DepthAndColorBuffer ]
 
 type capabilityT = [ | #DepthTest ]
 
-type drawModeT = [ | #Points | #Triangles | #TriangleFan ]
+type drawModeT = [ | #Points | #Triangles | #TriangleStrip | #TriangleFan ]
 
 type shaderT
 type vertexShaderT = shaderT
@@ -22,8 +22,12 @@ type targetT = [ | #ArrayBuffer ]
 type usageT = [ | #StaticDraw ]
 
 type attribLocationT = int
+type uniformLocationT
 
 type dataTypeT = [ | #Float ]
+
+@bs.val @bs.scope("window")
+external requestAnimationFrame: (unit => unit) => unit = "requestAnimationFrame"
 
 @bs.val @bs.scope("document") @bs.return(nullable)
 external getCanvas: (@bs.as("canvas") _, unit) => option<canvasT> = "querySelector"
@@ -55,7 +59,17 @@ external clear: (
 @bs.send
 external drawArrays: (
   glT,
-  @bs.int [ | @bs.as(0x0000) #Points | @bs.as(0x0004) #Triangles | @bs.as(0x0006) #TriangleFan ],
+  @bs.int
+  [
+  | @bs.as(0x0000)
+  #Points
+  | @bs.as(0x0004)
+  #Triangles
+  | @bs.as(0x0005)
+  #TriangleStrip
+  | @bs.as(0x0006)
+  #TriangleFan
+  ],
   ~offset: int,
   ~count: int,
 ) => unit = "drawArrays"
@@ -105,6 +119,12 @@ external vertexAttribPointer: (
 ) => unit = "vertexAttribPointer"
 @bs.send
 external enableVertexAttribArray: (glT, attribLocationT) => unit = "enableVertexAttribArray"
+
+@bs.send @bs.return(nullable)
+external getUniformLocation: (glT, programT, string) => option<uniformLocationT> =
+  "getUniformLocation"
+
+@bs.send external uniform1f: (glT, uniformLocationT, float) => unit = "uniform1f"
 
 let makeShader = (ctx: glT, typ: [ | #VertexShader | #FragmentShader ], src: string): option<
   shaderT,
