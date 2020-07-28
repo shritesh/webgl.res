@@ -5,10 +5,11 @@ open WebGl
 let canvas = getCanvas()->Option.getExn
 let gl = canvas->getContext->Option.getExn
 
-let vertexShader =
-  gl
-  ->makeVertexShader(
-    `
+let program = {
+  let vertexShader =
+    gl
+    ->makeVertexShader(
+      `
     attribute vec4 vPosition;
 
     void main() {
@@ -22,48 +23,50 @@ let vertexShader =
         );
     }
     `,
-  )
-  ->Option.getExn
+    )
+    ->Option.getExn
 
-let fragmentShader =
-  gl
-  ->makeFragmentShader(
-    `
+  let fragmentShader =
+    gl
+    ->makeFragmentShader(
+      `
     precision mediump float;
 
     void main() {
         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
     }
     `,
-  )
-  ->Option.getExn
+    )
+    ->Option.getExn
 
-let program = gl->makeProgram(vertexShader, fragmentShader)->Option.getExn
+  gl->makeProgram(vertexShader, fragmentShader)->Option.getExn
+}
 
 gl->useProgram(program)
 
-let rec tesselate = (points, a, b, c, count) =>
-  if count == 0 {
-    list{a, b, c, ...points}
-  } else {
-    let ab = a->mix(b, 0.5)
-    let ac = a->mix(c, 0.5)
-    let bc = b->mix(c, 0.5)
+let points = {
+  let rec tesselate = (points, a, b, c, count) =>
+    if count == 0 {
+      list{a, b, c, ...points}
+    } else {
+      let ab = a->mix(b, 0.5)
+      let ac = a->mix(c, 0.5)
+      let bc = b->mix(c, 0.5)
 
-    points
-    ->tesselate(ab, ac, bc, count - 1)
-    ->tesselate(a, ab, ac, count - 1)
-    ->tesselate(b, bc, ab, count - 1)
-    ->tesselate(c, ac, bc, count - 1)
-  }
+      points
+      ->tesselate(ab, ac, bc, count - 1)
+      ->tesselate(a, ab, ac, count - 1)
+      ->tesselate(b, bc, ab, count - 1)
+      ->tesselate(c, ac, bc, count - 1)
+    }
 
-let makeTesselation = (a, b, c, count) => tesselate(list{}, a, b, c, count)->List.toArray
+  let makeTesselation = (a, b, c, count) => tesselate(list{}, a, b, c, count)->List.toArray
 
-let _SUBDIVISIONS = 4
+  let (v0, v1, v2) = ((0.0, 0.75), (-0.75, -0.75), (0.75, -0.75))
+  let subDivisions = 4
 
-let (v0, v1, v2) = ((0.0, 0.75), (-0.75, -0.75), (0.75, -0.75))
-
-let points = makeTesselation(v0, v1, v2, _SUBDIVISIONS)
+  makeTesselation(v0, v1, v2, subDivisions)
+}
 
 let buffer = gl->createBuffer->Option.getExn
 gl->bindBuffer(#ArrayBuffer, buffer)

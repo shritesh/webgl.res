@@ -5,36 +5,35 @@ open WebGl
 let canvas = getCanvas()->Option.getExn
 let gl = canvas->getContext->Option.getExn
 
-gl->viewport(~x=0, ~y=0, ~width=canvas->width, ~height=canvas->height)
-gl->clearColor(~r=1.0, ~g=1.0, ~b=1.0, ~a=1.0)
-
-let vertexShader =
-  gl
-  ->makeVertexShader(
-    `
+let program = {
+  let vertexShader =
+    gl
+    ->makeVertexShader(
+      `
       attribute vec4 vPosition;
 
       void main() {
         gl_Position = vPosition;
       }
       `,
-  )
-  ->Option.getExn
+    )
+    ->Option.getExn
 
-let fragmentShader =
-  gl
-  ->makeFragmentShader(
-    `
+  let fragmentShader =
+    gl
+    ->makeFragmentShader(
+      `
       precision mediump float;
       
       void main() {
         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
       }
       `,
-  )
-  ->Option.getExn
+    )
+    ->Option.getExn
 
-let program = gl->makeProgram(vertexShader, fragmentShader)->Option.getExn
+  gl->makeProgram(vertexShader, fragmentShader)->Option.getExn
+}
 
 gl->useProgram(program)
 
@@ -55,5 +54,7 @@ gl->vertexAttribPointer(
 )
 gl->enableVertexAttribArray(vPosition)
 
+gl->viewport(~x=0, ~y=0, ~width=canvas->width, ~height=canvas->height)
+gl->clearColor(~r=1.0, ~g=1.0, ~b=1.0, ~a=1.0)
 gl->clear(#ColorBuffer)
 gl->drawArrays(#Triangles, ~offset=0, ~count=3)

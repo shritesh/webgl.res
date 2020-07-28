@@ -125,34 +125,29 @@ external getUniformLocation: (glT, programT, string) => option<uniformLocationT>
 
 let makeShader = (ctx: glT, typ: [ | #VertexShader | #FragmentShader ], src: string): option<
   shaderT,
-> => {
-  ctx->createShader(typ)->Option.flatMap(shader => {
+> => ctx->createShader(typ)->Option.flatMap(shader => {
     ctx->shaderSource(shader, src)
     ctx->compileShader(shader)
     ctx->getShaderParamBool(shader, #CompileStatus) ? Some(shader) : None
   })
-}
 
-let makeVertexShader = (ctx: glT, src: string): option<vertexShaderT> => {
+let makeVertexShader = (ctx: glT, src: string): option<vertexShaderT> =>
   ctx->makeShader(#VertexShader, src)
-}
 
 let makeFragmentShader = (ctx: glT, src: string): option<fragmentShaderT> => {
   ctx->makeShader(#FragmentShader, src)
 }
 
-let makeProgram = (ctx: glT, vert: vertexShaderT, frag: fragmentShaderT): option<programT> => {
+let makeProgram = (ctx: glT, vert: vertexShaderT, frag: fragmentShaderT): option<programT> =>
   ctx->createProgram->Option.flatMap(program => {
     ctx->attachShader(program, vert)
     ctx->attachShader(program, frag)
     ctx->linkProgram(program)
     ctx->getProgramParamBool(program, #LinkStatus) ? Some(program) : None
   })
-}
 
-let getAttribLocation = (ctx: glT, program: programT, src: string): option<attribLocationT> => {
+let getAttribLocation = (ctx: glT, program: programT, src: string): option<attribLocationT> =>
   switch _getAttribLocation(ctx, program, src) {
   | -1 => None
   | loc => Some(loc)
   }
-}

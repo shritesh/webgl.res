@@ -5,10 +5,11 @@ open WebGl
 let canvas = getCanvas()->Option.getExn
 let gl = canvas->getContext->Option.getExn
 
-let vertexShader =
-  gl
-  ->makeVertexShader(
-    `
+let program = {
+  let vertexShader =
+    gl
+    ->makeVertexShader(
+      `
     attribute vec4 vPosition;
     attribute vec4 vColor;
     varying vec4 fColor;
@@ -17,13 +18,13 @@ let vertexShader =
       fColor = vColor;
       gl_Position = vPosition;
     }`,
-  )
-  ->Option.getExn
+    )
+    ->Option.getExn
 
-let fragmentShader =
-  gl
-  ->makeFragmentShader(
-    `
+  let fragmentShader =
+    gl
+    ->makeFragmentShader(
+      `
     precision mediump float;
     
     varying vec4 fColor;
@@ -31,57 +32,60 @@ let fragmentShader =
     void main() {
       gl_FragColor = fColor;
     }`,
-  )
-  ->Option.getExn
+    )
+    ->Option.getExn
 
-let program = gl->makeProgram(vertexShader, fragmentShader)->Option.getExn
+  gl->makeProgram(vertexShader, fragmentShader)->Option.getExn
+}
 
 gl->useProgram(program)
 
-let triangle = ((points, colors), a, b, c, color) => (
-  list{a, b, c, ...points},
-  list{color, color, color, ...colors},
-)
+let (points, colors) = {
+  let triangle = ((points, colors), a, b, c, color) => (
+    list{a, b, c, ...points},
+    list{color, color, color, ...colors},
+  )
 
-let tetra = (attrs, a, b, c, d) =>
-  attrs
-  ->triangle(a, c, b, (1.0, 0.0, 0.0))
-  ->triangle(a, c, d, (0.0, 1.0, 0.0))
-  ->triangle(a, b, d, (0.0, 0.0, 1.0))
-  ->triangle(b, c, d, (0.0, 0.0, 0.0))
-
-let rec divideTetra = (attrs, a, b, c, d, count) =>
-  if count == 0 {
-    attrs->tetra(a, b, c, d)
-  } else {
-    let ab = a->mix(b, 0.5)
-    let ac = a->mix(c, 0.5)
-    let ad = a->mix(d, 0.5)
-    let bc = b->mix(c, 0.5)
-    let bd = b->mix(d, 0.5)
-    let cd = c->mix(d, 0.5)
-
+  let tetra = (attrs, a, b, c, d) =>
     attrs
-    ->divideTetra(a, ab, ac, ad, count - 1)
-    ->divideTetra(ab, b, bc, bd, count - 1)
-    ->divideTetra(ac, bc, c, cd, count - 1)
-    ->divideTetra(ad, bd, cd, d, count - 1)
+    ->triangle(a, c, b, (1.0, 0.0, 0.0))
+    ->triangle(a, c, d, (0.0, 1.0, 0.0))
+    ->triangle(a, b, d, (0.0, 0.0, 1.0))
+    ->triangle(b, c, d, (0.0, 0.0, 0.0))
+
+  let rec divideTetra = (attrs, a, b, c, d, count) =>
+    if count == 0 {
+      attrs->tetra(a, b, c, d)
+    } else {
+      let ab = a->mix(b, 0.5)
+      let ac = a->mix(c, 0.5)
+      let ad = a->mix(d, 0.5)
+      let bc = b->mix(c, 0.5)
+      let bd = b->mix(d, 0.5)
+      let cd = c->mix(d, 0.5)
+
+      attrs
+      ->divideTetra(a, ab, ac, ad, count - 1)
+      ->divideTetra(ab, b, bc, bd, count - 1)
+      ->divideTetra(ac, bc, c, cd, count - 1)
+      ->divideTetra(ad, bd, cd, d, count - 1)
+    }
+
+  let makeTetra = (a, b, c, d, count) => {
+    let (points, colors) = divideTetra((list{}, list{}), a, b, c, d, count)
+    (points->List.toArray, colors->List.toArray)
   }
 
-let makeTetra = (a, b, c, d, count) => {
-  let (points, colors) = divideTetra((list{}, list{}), a, b, c, d, count)
-  (points->List.toArray, colors->List.toArray)
+  let (v0, v1, v2, v3) = (
+    (0.0000, 0.0000, -1.0000),
+    (0.0000, 0.9428, 0.3333),
+    (-0.8165, -0.4714, 0.3333),
+    (0.8165, -0.4714, 0.3333),
+  )
+  let subdivisions = 3
+
+  makeTetra(v0, v1, v2, v3, subdivisions)
 }
-
-let (v0, v1, v2, v3) = (
-  (0.0000, 0.0000, -1.0000),
-  (0.0000, 0.9428, 0.3333),
-  (-0.8165, -0.4714, 0.3333),
-  (0.8165, -0.4714, 0.3333),
-)
-
-let _SUBDIVISIONS = 3
-let (points, colors) = makeTetra(v0, v1, v2, v3, _SUBDIVISIONS)
 
 let vBuffer = gl->createBuffer->Option.getExn
 gl->bindBuffer(#ArrayBuffer, vBuffer)

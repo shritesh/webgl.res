@@ -2,15 +2,14 @@ open Belt
 open WebGl
 open Vec3
 
-let _NUM_POINTS = 500_000
-
 let canvas = getCanvas()->Option.getExn
 let gl = canvas->getContext->Option.getExn
 
-let vertexShader =
-  gl
-  ->makeVertexShader(
-    `
+let program = {
+  let vertexShader =
+    gl
+    ->makeVertexShader(
+      `
       attribute vec4 vPosition;
       varying vec4 fColor;
 
@@ -20,13 +19,13 @@ let vertexShader =
         gl_Position = vPosition;
       }
       `,
-  )
-  ->Option.getExn
+    )
+    ->Option.getExn
 
-let fragmentShader =
-  gl
-  ->makeFragmentShader(
-    `
+  let fragmentShader =
+    gl
+    ->makeFragmentShader(
+      `
       precision mediump float;
 
       varying vec4 fColor;
@@ -35,33 +34,37 @@ let fragmentShader =
         gl_FragColor = fColor;
       }
       `,
-  )
-  ->Option.getExn
+    )
+    ->Option.getExn
 
-let program = gl->makeProgram(vertexShader, fragmentShader)->Option.getExn
+  gl->makeProgram(vertexShader, fragmentShader)->Option.getExn
+}
 
 gl->useProgram(program)
 
-let (v0, v1, v2, v3) = (
-  (0.0000, 0.0000, -1.0000),
-  (0.0000, 0.9428, 0.3333),
-  (-0.8165, -0.4714, 0.3333),
-  (0.8165, -0.4714, 0.3333),
-)
+let vertices = {
+  let (v0, v1, v2, v3) = (
+    (0.0000, 0.0000, -1.0000),
+    (0.0000, 0.9428, 0.3333),
+    (-0.8165, -0.4714, 0.3333),
+    (0.8165, -0.4714, 0.3333),
+  )
+  let numPoints = 500_000
 
-let p = (0.0, 0.0, 0.0)->ref
+  let p = (0.0, 0.0, 0.0)->ref
 
-let vertices = Array.makeBy(_NUM_POINTS, _ => {
-  let vertex = switch Js.Math.random_int(0, 4) {
-  | 0 => v0
-  | 1 => v1
-  | 2 => v2
-  | _ => v3
-  }
+  Array.makeBy(numPoints, _ => {
+    let vertex = switch Js.Math.random_int(0, 4) {
+    | 0 => v0
+    | 1 => v1
+    | 2 => v2
+    | _ => v3
+    }
 
-  p := p.contents->mix(vertex, 0.5)
-  p.contents
-})
+    p := p.contents->mix(vertex, 0.5)
+    p.contents
+  })
+}
 
 let buffer = gl->createBuffer->Option.getExn
 gl->bindBuffer(#ArrayBuffer, buffer)

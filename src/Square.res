@@ -4,33 +4,35 @@ open WebGl
 let canvas = getCanvas()->Option.getExn
 let gl = canvas->getContext->Option.getExn
 
-let vertexShader =
-  gl
-  ->makeVertexShader(
-    `
+let program = {
+  let vertexShader =
+    gl
+    ->makeVertexShader(
+      `
       attribute vec4 vPosition;
 
       void main() {
         gl_Position = vPosition;
       }
       `,
-  )
-  ->Option.getExn
+    )
+    ->Option.getExn
 
-let fragmentShader =
-  gl
-  ->makeFragmentShader(
-    `
+  let fragmentShader =
+    gl
+    ->makeFragmentShader(
+      `
       precision mediump float;
       
       void main() {
         gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
       }
       `,
-  )
-  ->Option.getExn
+    )
+    ->Option.getExn
 
-let program = gl->makeProgram(vertexShader, fragmentShader)->Option.getExn
+  gl->makeProgram(vertexShader, fragmentShader)->Option.getExn
+}
 
 gl->useProgram(program)
 
