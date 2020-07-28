@@ -1,6 +1,3 @@
-open Js.Typed_array
-
-type canvasT
 type glT
 
 type clearMaskT = [ | #DepthBuffer | #ColorBuffer | #DepthAndColorBuffer ]
@@ -23,13 +20,8 @@ type uniformLocationT
 
 type dataTypeT = [ | #Float ]
 
-let getCanvas: unit => option<canvasT>
-
-@bs.get external width: canvasT => int = "width"
-@bs.get external height: canvasT => int = "height"
-
 @bs.send @bs.return(nullable)
-external getContext: (canvasT, @bs.as("webgl") _) => option<glT> = "getContext"
+external getContext: (Dom.elementT, @bs.as("webgl") _) => option<glT> = "getContext"
 @bs.send external viewport: (glT, ~x: int, ~y: int, ~width: int, ~height: int) => unit = "viewport"
 @bs.send
 external clearColor: (glT, ~r: float, ~g: float, ~b: float, ~a: float) => unit = "clearColor"
@@ -81,7 +73,7 @@ external bindBuffer: (glT, @bs.int [ | @bs.as(0x8892) #ArrayBuffer ], bufferT) =
 external bufferData: (
   glT,
   @bs.int [ | @bs.as(0x8892) #ArrayBuffer ],
-  ArrayBuffer.t,
+  Js.Typed_array.ArrayBuffer.t,
   @bs.int [ | @bs.as(0x88E4) #StaticDraw ],
 ) => unit = "bufferData"
 

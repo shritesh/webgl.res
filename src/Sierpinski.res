@@ -1,8 +1,9 @@
 open Belt
-open WebGl
+open Dom
 open Vec2
+open WebGl
 
-let canvas = getCanvas()->Option.getExn
+let canvas = querySelector("canvas")->Option.getExn
 let gl = canvas->getContext->Option.getExn
 
 let program = {
@@ -76,7 +77,7 @@ gl->vertexAttribPointer(
 )
 gl->enableVertexAttribArray(vPosition)
 
-gl->viewport(~x=0, ~y=0, ~width=canvas->width, ~height=canvas->height)
+gl->viewport(~x=0, ~y=0, ~width=canvas->getWidth, ~height=canvas->getHeight)
 gl->clearColor(~r=1.0, ~g=1.0, ~b=1.0, ~a=1.0)
 gl->clear(#ColorBuffer)
 gl->drawArrays(#Triangles, ~offset=0, ~count=points->Array.length)

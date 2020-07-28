@@ -11,3 +11,5 @@ external querySelector: string => option<elementT> = "querySelector"
 @bs.send external addEventListener: (elementT, string, unit => unit) => unit = "addEventListener"
 
 @bs.get external getValue: elementT => string = "value"
+@bs.get external getWidth: elementT => int = "width"
+@bs.get external getHeight: elementT => int = "height"
