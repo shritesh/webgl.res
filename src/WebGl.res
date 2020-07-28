@@ -134,9 +134,8 @@ let makeShader = (ctx: glT, typ: [ | #VertexShader | #FragmentShader ], src: str
 let makeVertexShader = (ctx: glT, src: string): option<vertexShaderT> =>
   ctx->makeShader(#VertexShader, src)
 
-let makeFragmentShader = (ctx: glT, src: string): option<fragmentShaderT> => {
+let makeFragmentShader = (ctx: glT, src: string): option<fragmentShaderT> =>
   ctx->makeShader(#FragmentShader, src)
-}
 
 let makeProgram = (ctx: glT, vert: vertexShaderT, frag: fragmentShaderT): option<programT> =>
   ctx->createProgram->Option.flatMap(program => {
