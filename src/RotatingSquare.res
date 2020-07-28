@@ -59,8 +59,6 @@ let thetaLoc = gl->getUniformLocation(program, "theta")->Option.getExn
 let theta = ref(0.0)
 
 let rec render = () => {
-  gl->viewport(~x=0, ~y=0, ~width=canvas->width, ~height=canvas->height)
-  gl->clearColor(~r=1.0, ~g=1.0, ~b=1.0, ~a=1.0)
   gl->clear(#ColorBuffer)
 
   theta := theta.contents +. 0.1
@@ -71,4 +69,6 @@ let rec render = () => {
   requestAnimationFrame(render)
 }
 
+gl->viewport(~x=0, ~y=0, ~width=canvas->width, ~height=canvas->height)
+gl->clearColor(~r=1.0, ~g=1.0, ~b=1.0, ~a=1.0)
 render()
