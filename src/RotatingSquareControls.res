@@ -66,7 +66,7 @@ let theta = ref(0.0)
 type direction = Clockwise | CounterClockwise
 let direction = ref(Clockwise)
 
-toggleBtn->addEventListener("click", () =>
+toggleBtn->onClick(_ =>
   direction :=
     switch direction.contents {
     | Clockwise => CounterClockwise
@@ -75,7 +75,7 @@ toggleBtn->addEventListener("click", () =>
 )
 
 let delay = ref(50)
-speedSlider->addEventListener("input", () => delay := 100 - speedSlider->getValue->int_of_string)
+speedSlider->onInput(_ => delay := 100 - speedSlider->getValue->int_of_string)
 
 let rec render = () => {
   gl->clear(#ColorBuffer)

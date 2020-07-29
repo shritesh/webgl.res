@@ -95,6 +95,20 @@ external bufferData: (
   Js.Typed_array.ArrayBuffer.t,
   @bs.int [ | @bs.as(0x88E4) #StaticDraw ],
 ) => unit = "bufferData"
+@bs.send
+external bufferDataUninitialized: (
+  glT,
+  @bs.int [ | @bs.as(0x8892) #ArrayBuffer ],
+  int,
+  @bs.int [ | @bs.as(0x88E4) #StaticDraw ],
+) => unit = "bufferData"
+@bs.send
+external bufferSubData: (
+  glT,
+  @bs.int [ | @bs.as(0x8892) #ArrayBuffer ],
+  int,
+  Js.Typed_array.ArrayBuffer.t,
+) => unit = "bufferSubData"
 
 @bs.send external _getAttribLocation: (glT, programT, string) => int = "getAttribLocation"
 @bs.send
