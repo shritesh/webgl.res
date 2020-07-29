@@ -72,13 +72,10 @@ let numPoints = ref(0)
 
 canvas->onClick(event =>
   if numPoints.contents < maxPoints {
-    let t = (
-      -1.0 +. 2.0 *. event->getOffsetX /. canvas->getWidth->float_of_int,
-      -1.0 +.
-      2.0 *.
-      (canvas->getHeight->float_of_int -. event->getOffsetY) /.
-      canvas->getHeight->float_of_int,
-    )
+    let (offsetX, offsetY) = (event->getOffsetX, event->getOffsetY)
+    let (width, height) = (canvas->getHeight->float_of_int, canvas->getWidth->float_of_int)
+    let t = (-1.0 +. 2.0 *. offsetX /. width, -1.0 +. 2.0 *. (height -. offsetY) /. height)
+
     gl->bindBuffer(#ArrayBuffer, positionBuffer)
     gl->bufferSubData(#ArrayBuffer, Vec2.size * numPoints.contents, [t]->Vec2.flatten)
 
@@ -103,7 +100,7 @@ canvas->onClick(event =>
 
 let rec render = () => {
   gl->clear(#ColorBuffer)
-  
+
   switch numPoints.contents {
   | 0 => ()
   | 1 => gl->drawArrays(#Points, ~offset=0, ~count=1)

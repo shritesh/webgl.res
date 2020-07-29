@@ -74,13 +74,10 @@ canvas->onMouseUp(_ => drawing := false)
 canvas->onMouseDown(_ => drawing := true)
 canvas->onMouseMove(event =>
   if drawing.contents && numPoints.contents < maxPoints {
-    let t = (
-      -1.0 +. 2.0 *. event->getOffsetX /. canvas->getWidth->float_of_int,
-      -1.0 +.
-      2.0 *.
-      (canvas->getHeight->float_of_int -. event->getOffsetY) /.
-      canvas->getHeight->float_of_int,
-    )
+    let (offsetX, offsetY) = (event->getOffsetX, event->getOffsetY)
+    let (width, height) = (canvas->getHeight->float_of_int, canvas->getWidth->float_of_int)
+    let t = (-1.0 +. 2.0 *. offsetX /. width, -1.0 +. 2.0 *. (height -. offsetY) /. height)
+
     gl->bindBuffer(#ArrayBuffer, positionBuffer)
     gl->bufferSubData(#ArrayBuffer, Vec2.size * numPoints.contents, [t]->Vec2.flatten)
 
