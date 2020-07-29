@@ -14,7 +14,8 @@ external querySelector: string => option<elementT> = "querySelector"
 @bs.get external getWidth: elementT => int = "width"
 @bs.get external getHeight: elementT => int = "height"
 
-@bs.send external onClick: (elementT, @bs.as("click") _, unit => unit) => unit = "addEventListener"
+@bs.send
+external onClick: (elementT, @bs.as("click") _, mouseEventT => unit) => unit = "addEventListener"
 @bs.send external onInput: (elementT, @bs.as("input") _, unit => unit) => unit = "addEventListener"
 
 @bs.send

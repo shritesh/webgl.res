@@ -6,7 +6,7 @@ type clearMaskT = [ | #DepthBuffer | #ColorBuffer | #DepthAndColorBuffer ]
 
 type capabilityT = [ | #DepthTest ]
 
-type drawModeT = [ | #Points | #Triangles | #TriangleStrip | #TriangleFan ]
+type drawModeT = [ | #Points | #Lines | #Triangles | #TriangleStrip | #TriangleFan ]
 
 type shaderT
 type vertexShaderT = shaderT
@@ -53,6 +53,8 @@ external drawArrays: (
   [
   | @bs.as(0x0000)
   #Points
+  | @bs.as(0x0001)
+  #Lines
   | @bs.as(0x0004)
   #Triangles
   | @bs.as(0x0005)
