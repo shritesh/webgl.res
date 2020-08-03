@@ -2,11 +2,11 @@ open Belt
 
 type glT
 
-type clearMaskT = [ | #DepthBuffer | #ColorBuffer | #DepthAndColorBuffer ]
+type clearMaskT = [#DepthBuffer | #ColorBuffer | #DepthAndColorBuffer]
 
-type capabilityT = [ | #DepthTest ]
+type capabilityT = [#DepthTest]
 
-type drawModeT = [ | #Points | #Lines | #Triangles | #TriangleStrip | #TriangleFan ]
+type drawModeT = [#Points | #Lines | #Triangles | #TriangleStrip | #TriangleFan]
 
 type shaderT
 type vertexShaderT = shaderT
@@ -16,13 +16,13 @@ type programT
 
 type bufferT
 
-type targetT = [ | #ArrayBuffer ]
-type usageT = [ | #StaticDraw ]
+type targetT = [#ArrayBuffer]
+type usageT = [#StaticDraw]
 
 type attribLocationT = int
 type uniformLocationT
 
-type dataTypeT = [ | #Float ]
+type dataTypeT = [#Float]
 
 @bs.send @bs.return(nullable)
 external getContext: (Dom.elementT, @bs.as("webgl") _) => option<glT> = "getContext"
@@ -35,32 +35,32 @@ external clear: (
   glT,
   @bs.int
   [
-  | @bs.as(0x00000100)
-  #DepthBuffer
-  | @bs.as(0x00004000)
-  #ColorBuffer
-  | @bs.as(0x00004100)
-  #DepthAndColorBuffer
+    | @bs.as(0x00000100)
+    #DepthBuffer
+    | @bs.as(0x00004000)
+    #ColorBuffer
+    | @bs.as(0x00004100)
+    #DepthAndColorBuffer
   ],
 ) => unit = "clear"
 
-@bs.send external enable: (glT, @bs.int [ | @bs.as(0x0B71) #DepthTest ]) => unit = "enable"
+@bs.send external enable: (glT, @bs.int [@bs.as(0x0B71) #DepthTest]) => unit = "enable"
 
 @bs.send
 external drawArrays: (
   glT,
   @bs.int
   [
-  | @bs.as(0x0000)
-  #Points
-  | @bs.as(0x0001)
-  #Lines
-  | @bs.as(0x0004)
-  #Triangles
-  | @bs.as(0x0005)
-  #TriangleStrip
-  | @bs.as(0x0006)
-  #TriangleFan
+    | @bs.as(0x0000)
+    #Points
+    | @bs.as(0x0001)
+    #Lines
+    | @bs.as(0x0004)
+    #Triangles
+    | @bs.as(0x0005)
+    #TriangleStrip
+    | @bs.as(0x0006)
+    #TriangleFan
   ],
   ~offset: int,
   ~count: int,
@@ -69,45 +69,44 @@ external drawArrays: (
 @bs.send @bs.return(nullable)
 external createShader: (
   glT,
-  @bs.int [ | @bs.as(0x8B31) #VertexShader | @bs.as(0x8B30) #FragmentShader ],
+  @bs.int [@bs.as(0x8B31) #VertexShader | @bs.as(0x8B30) #FragmentShader],
 ) => option<shaderT> = "createShader"
 
 @bs.send external shaderSource: (glT, shaderT, string) => unit = "shaderSource"
 @bs.send external compileShader: (glT, shaderT) => unit = "compileShader"
 @bs.send
-external getShaderParamBool: (glT, shaderT, @bs.int [ | @bs.as(0x8B81) #CompileStatus ]) => bool =
+external getShaderParamBool: (glT, shaderT, @bs.int [@bs.as(0x8B81) #CompileStatus]) => bool =
   "getShaderParameter"
 
 @bs.send external createProgram: glT => option<programT> = "createProgram"
 @bs.send external attachShader: (glT, programT, shaderT) => unit = "attachShader"
 @bs.send external linkProgram: (glT, programT) => unit = "linkProgram"
 @bs.send
-external getProgramParamBool: (glT, programT, @bs.int [ | @bs.as(0x8B82) #LinkStatus ]) => bool =
+external getProgramParamBool: (glT, programT, @bs.int [@bs.as(0x8B82) #LinkStatus]) => bool =
   "getProgramParameter"
 @bs.send external useProgram: (glT, programT) => unit = "useProgram"
 
 @bs.send @bs.return(nullable) external createBuffer: glT => option<bufferT> = "createBuffer"
 @bs.send
-external bindBuffer: (glT, @bs.int [ | @bs.as(0x8892) #ArrayBuffer ], bufferT) => unit =
-  "bindBuffer"
+external bindBuffer: (glT, @bs.int [@bs.as(0x8892) #ArrayBuffer], bufferT) => unit = "bindBuffer"
 @bs.send
 external bufferData: (
   glT,
-  @bs.int [ | @bs.as(0x8892) #ArrayBuffer ],
+  @bs.int [@bs.as(0x8892) #ArrayBuffer],
   Js.Typed_array.ArrayBuffer.t,
-  @bs.int [ | @bs.as(0x88E4) #StaticDraw ],
+  @bs.int [@bs.as(0x88E4) #StaticDraw],
 ) => unit = "bufferData"
 @bs.send
 external bufferDataUninitialized: (
   glT,
-  @bs.int [ | @bs.as(0x8892) #ArrayBuffer ],
+  @bs.int [@bs.as(0x8892) #ArrayBuffer],
   int,
-  @bs.int [ | @bs.as(0x88E4) #StaticDraw ],
+  @bs.int [@bs.as(0x88E4) #StaticDraw],
 ) => unit = "bufferData"
 @bs.send
 external bufferSubData: (
   glT,
-  @bs.int [ | @bs.as(0x8892) #ArrayBuffer ],
+  @bs.int [@bs.as(0x8892) #ArrayBuffer],
   int,
   Js.Typed_array.ArrayBuffer.t,
 ) => unit = "bufferSubData"
@@ -118,7 +117,7 @@ external vertexAttribPointer: (
   glT,
   attribLocationT,
   ~size: int,
-  ~dataType: @bs.int [ | @bs.as(0x1406) #Float ],
+  ~dataType: @bs.int [@bs.as(0x1406) #Float],
   ~normalized: bool,
   ~stride: int,
   ~offset: int,
@@ -132,9 +131,8 @@ external getUniformLocation: (glT, programT, string) => option<uniformLocationT>
 
 @bs.send external uniform1f: (glT, uniformLocationT, float) => unit = "uniform1f"
 
-let makeShader = (ctx: glT, typ: [ | #VertexShader | #FragmentShader ], src: string): option<
-  shaderT,
-> => ctx->createShader(typ)->Option.flatMap(shader => {
+let makeShader = (ctx: glT, typ: [#VertexShader | #FragmentShader], src: string): option<shaderT> =>
+  ctx->createShader(typ)->Option.flatMap(shader => {
     ctx->shaderSource(shader, src)
     ctx->compileShader(shader)
     ctx->getShaderParamBool(shader, #CompileStatus) ? Some(shader) : None
