@@ -9,8 +9,7 @@ let gl = canvas->getContext->Option.getExn
 let program = {
   let vertexShader =
     gl
-    ->makeVertexShader(
-      `
+    ->makeVertexShader(`
       attribute vec4 vPosition;
       varying vec4 fColor;
 
@@ -19,14 +18,12 @@ let program = {
         gl_PointSize = 1.0;
         gl_Position = vPosition;
       }
-      `,
-    )
+      `)
     ->Option.getExn
 
   let fragmentShader =
     gl
-    ->makeFragmentShader(
-      `
+    ->makeFragmentShader(`
       precision mediump float;
 
       varying vec4 fColor;
@@ -34,8 +31,7 @@ let program = {
       void main() {
         gl_FragColor = fColor;
       }
-      `,
-    )
+      `)
     ->Option.getExn
 
   gl->makeProgram(vertexShader, fragmentShader)->Option.getExn

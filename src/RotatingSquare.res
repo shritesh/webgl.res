@@ -7,8 +7,7 @@ let gl = canvas->getContext->Option.getExn
 
 let vertexShader =
   gl
-  ->makeVertexShader(
-    `
+  ->makeVertexShader(`
     attribute vec4 vPosition;
     uniform float theta;
 
@@ -17,21 +16,18 @@ let vertexShader =
         float y = sin(theta) * vPosition.y + cos(theta) * vPosition.x;
         gl_Position = vec4(x, y, 0.0, 1.0);
     }
-    `,
-  )
+    `)
   ->Option.getExn
 
 let fragmentShader =
   gl
-  ->makeFragmentShader(
-    `
+  ->makeFragmentShader(`
     precision mediump float;
     
     void main() {
         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
     }
-    `,
-  )
+    `)
   ->Option.getExn
 
 let program = gl->makeProgram(vertexShader, fragmentShader)->Option.getExn

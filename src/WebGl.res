@@ -132,7 +132,9 @@ external getUniformLocation: (glT, programT, string) => option<uniformLocationT>
 @send external uniform1f: (glT, uniformLocationT, float) => unit = "uniform1f"
 
 let makeShader = (ctx: glT, typ: [#VertexShader | #FragmentShader], src: string): option<shaderT> =>
-  ctx->createShader(typ)->Option.flatMap(shader => {
+  ctx
+  ->createShader(typ)
+  ->Option.flatMap(shader => {
     ctx->shaderSource(shader, src)
     ctx->compileShader(shader)
     ctx->getShaderParamBool(shader, #CompileStatus) ? Some(shader) : None
@@ -145,7 +147,9 @@ let makeFragmentShader = (ctx: glT, src: string): option<fragmentShaderT> =>
   ctx->makeShader(#FragmentShader, src)
 
 let makeProgram = (ctx: glT, vert: vertexShaderT, frag: fragmentShaderT): option<programT> =>
-  ctx->createProgram->Option.flatMap(program => {
+  ctx
+  ->createProgram
+  ->Option.flatMap(program => {
     ctx->attachShader(program, vert)
     ctx->attachShader(program, frag)
     ctx->linkProgram(program)
